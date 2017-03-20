@@ -27,6 +27,11 @@ if(WIN32)
     set(WIN32_BUILTIN BUILTIN)
 endif()
 
+set(PY3_BUILTIN )
+if(IS_PY3)
+    set(PY3_BUILTIN BUILTIN)
+endif()
+
 # XXX Following modules are missing:
 # lzma
 
@@ -40,7 +45,7 @@ add_python_extension(_codecs_iso2022 ${WIN32_BUILTIN} SOURCES cjkcodecs/_codecs_
 add_python_extension(_codecs_jp ${WIN32_BUILTIN} SOURCES cjkcodecs/_codecs_jp.c)
 add_python_extension(_codecs_kr ${WIN32_BUILTIN} SOURCES cjkcodecs/_codecs_kr.c)
 add_python_extension(_codecs_tw ${WIN32_BUILTIN} SOURCES cjkcodecs/_codecs_tw.c)
-add_python_extension(_collections ALWAYS_BUILTIN SOURCES _collectionsmodule.c) # Container types
+add_python_extension(_collections ${WIN32_BUILTIN} ${PY3_BUILTIN} SOURCES _collectionsmodule.c) # Container types
 add_python_extension(cPickle ${WIN32_BUILTIN} REQUIRES IS_PY2 SOURCES cPickle.c)
 set(crypt2_NAME crypt)
 set(crypt2_SOURCES cryptmodule.c)
@@ -54,14 +59,14 @@ set(datetime2_NAME datetime)
 set(datetime2_SOURCES datetimemodule.c)
 set(datetime3_NAME _datetime)
 set(datetime3_SOURCES _datetimemodule.c)
-if(UNIX)
+if(UNIX AND IS_PY2)
   list(APPEND datetime${PY_VERSION_MAJOR}_SOURCES timemodule.c)
 endif()
-add_python_extension(${datetime${PY_VERSION_MAJOR}_NAME} ${WIN32_BUILTIN} REQUIRES HAVE_LIBM BUILTIN SOURCES ${datetime${PY_VERSION_MAJOR}_SOURCES} LIBRARIES ${M_LIBRARIES})
+add_python_extension(${datetime${PY_VERSION_MAJOR}_NAME} ${WIN32_BUILTIN} REQUIRES HAVE_LIBM SOURCES ${datetime${PY_VERSION_MAJOR}_SOURCES} LIBRARIES ${M_LIBRARIES})
 #if(ENABLE_DATETIME AND CMAKE_C_COMPILER_ID MATCHES GNU)
 #    set_property(SOURCE ${SRC_DIR}/Modules/datetimemodule.c PROPERTY COMPILE_FLAGS -Wno-unused-value)
 #endif()
-add_python_extension(_functools ${WIN32_BUILTIN} SOURCES _functoolsmodule.c) # Tools for working with functions and callable objects
+add_python_extension(_functools ${WIN32_BUILTIN} ${PY3_BUILTIN} SOURCES _functoolsmodule.c) # Tools for working with functions and callable objects
 add_python_extension(future_builtins ${WIN32_BUILTIN} REQUIRES IS_PY2 SOURCES future_builtins.c)
 add_python_extension(_heapq ${WIN32_BUILTIN} SOURCES _heapqmodule.c)
 add_python_extension(_hotshot ${WIN32_BUILTIN} REQUIRES IS_PY2 SOURCES _hotshot.c)
@@ -82,7 +87,7 @@ if(WIN32 AND EXISTS ${SRC_DIR}/Modules/_io/winconsoleio.c)
 endif()
 add_python_extension(_io BUILTIN SOURCES ${_io_SOURCES})
 
-add_python_extension(itertools ${WIN32_BUILTIN} SOURCES itertoolsmodule.c) # Functions creating iterators for efficient looping
+add_python_extension(itertools ${WIN32_BUILTIN} ${PY3_BUILTIN} SOURCES itertoolsmodule.c) # Functions creating iterators for efficient looping
 add_python_extension(_json ${WIN32_BUILTIN} SOURCES _json.c)
 add_python_extension(_locale ${WIN32_BUILTIN} SOURCES _localemodule.c) # access to ISO C locale support
 add_python_extension(_lsprof ${WIN32_BUILTIN} SOURCES _lsprof.c rotatingtree.c)
@@ -100,7 +105,7 @@ set(thread3_NAME _thread)
 set(thread2_SOURCES ${SRC_DIR}/Modules/threadmodule.c)
 set(thread3_SOURCES ${SRC_DIR}/Modules/_threadmodule.c)
 add_python_extension(${thread${PY_VERSION_MAJOR}_NAME} BUILTIN REQUIRES WITH_THREAD SOURCES ${thread${PY_VERSION_MAJOR}_SOURCES})
-add_python_extension(time BUILTIN REQUIRES HAVE_LIBM SOURCES timemodule.c LIBRARIES ${M_LIBRARIES} ${TIMEMODULE_LIB})
+add_python_extension(time ${WIN32_BUILTIN} ${PY3_BUILTIN} REQUIRES HAVE_LIBM SOURCES timemodule.c LIBRARIES ${M_LIBRARIES} ${TIMEMODULE_LIB})
 add_python_extension(unicodedata SOURCES unicodedata.c)
 
 # Python3
