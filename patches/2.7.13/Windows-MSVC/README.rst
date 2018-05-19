@@ -15,6 +15,7 @@
   * 1700: VS2012
   * 1800: VS2013
   * 1900: VS2015
+  * 1914: VS2017 15.7
 
 * ``0002-VS2015-Support-Backport-Issue-22919-Windows-build-up.patch``: This patch
   is a partial backport of `python/cpython@65e4cb1 <https://github.com/python/cpython/commit/65e4cb1>`_.

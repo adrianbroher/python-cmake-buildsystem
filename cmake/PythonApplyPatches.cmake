@@ -102,8 +102,15 @@ _apply_patches("${PY_VERSION_MAJOR}.${PY_VERSION_MINOR}")
 _apply_patches("${_py_version}")
 _apply_patches("${_py_version}/${CMAKE_SYSTEM_NAME}")
 _apply_patches("${_py_version}/${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID}")
+
 set(_version ${CMAKE_C_COMPILER_VERSION})
 if(MSVC)
   set(_version ${MSVC_VERSION})
+  if("${_version}" VERSION_LESS "2000" AND
+      ("${_version}" VERSION_EQUAL "1900" OR "${_version}" VERSION_GREATER "1900"))
+    set(_version "1900")
+    message(STATUS "Using ${_version} patches for 1900 <= MSVC_VERSION < 2000")
+  endif()
 endif()
+
 _apply_patches("${_py_version}/${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID}/${_version}")
